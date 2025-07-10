@@ -20,8 +20,8 @@
           "amount": 1
         }
       ],
-      "payment": 2,
-      "status": 1
+      "payment": 1,
+      "status": 2
     },
     {
       "id_order": 2,
@@ -413,7 +413,8 @@
           "image": "../image/ショコラドゥ.jpg",
           "amount": 2
         }
-      ]
+      ],
+      "payment": 2
     },
     {
       "id_order": 19,
