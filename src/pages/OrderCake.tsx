@@ -60,6 +60,7 @@ function OrderCake() {
 
 
     try {
+      console.log(`${API_URL}/api/reserva`);
       const res = await fetch(`${API_URL}/api/reserva`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -68,8 +69,9 @@ function OrderCake() {
 
       const result = await res.json();
       if (result.success) {
+        console.log(`${API_URL}/api/reserva`);
         setOrderId(result.id); // armazena o id do pedido
-        alert(`送信が完了しました！受付番号: ${result.id}`);
+        alert(`送信が完了しました！受付番号: ${result.id}${API_URL}`);
       }
 
     } catch (error) {
