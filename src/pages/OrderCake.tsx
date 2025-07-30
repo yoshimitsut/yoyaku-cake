@@ -2,6 +2,8 @@ import { useState } from 'react';
 import cakesData from '../data/cake.json';
 import { QRCodeCanvas } from "qrcode.react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const cakeOptions = cakesData.cakes;
 
 type CakeOrder = {
@@ -58,7 +60,7 @@ function OrderCake() {
 
 
     try {
-      const res = await fetch("http://localhost:3001/api/reserva", {
+      const res = await fetch(`${API_URL}/api/reserva`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
