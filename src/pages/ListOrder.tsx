@@ -36,7 +36,7 @@ export default function ListaPedidos() {
   const [successSave, setSuccessSave] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/list')
+    fetch(`${import.meta.env.VITE_API_URL}/api/list`)
       .then((res) => res.json())
       .then((data) => setOrders(data))
       .catch((error: unknown) => {
