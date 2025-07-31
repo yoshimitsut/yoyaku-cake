@@ -53,7 +53,7 @@ export default function ListaPedidos() {
           setShowScanner(false);
           scanner.clear();
           try {
-            const res = await fetch('http://localhost:3001/api/list');
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/list`);
             const allOrders: Order[] = await res.json();
             const found = allOrders.find((o) => o.id_order === Number(decodedText));
             if (found) {
@@ -102,7 +102,7 @@ export default function ListaPedidos() {
     setSuccessSave(null);
 
     try {
-      const res = await fetch(`http://localhost:3001/api/reserva/${order.id_order}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reserva/${order.id_order}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: order.status, payment: order.payment }),
