@@ -6,10 +6,6 @@ import OrderCake from './pages/OrderCake';
 function App() {
   return (
     <Router>
-      <nav style={{ padding: 16 }}>
-        <Link to="/pedido" style={{ marginRight: 10 }}>Gerar QR do Pedido</Link>
-        <Link to="/leitor">Leitor de QR</Link>
-      </nav>
       <Routes>
         <Route path="/" element={<OrderCake />} />
         <Route path="/list" element={<ListOrder />} />

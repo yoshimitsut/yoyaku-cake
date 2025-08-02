@@ -88,14 +88,6 @@ export default function ListaPedidos() {
     );
   }
 
-  function handlePaymentChange(id_order: number, newPayment: number) {
-    setOrders((oldOrders) =>
-      oldOrders.map((order) =>
-        order.id_order === id_order ? { ...order, payment: newPayment } : order
-      )
-    );
-  }
-
   async function saveOrder(order: Order) {
     setLoadingSave(true);
     setErrorSave(null);
@@ -179,7 +171,6 @@ export default function ListaPedidos() {
               <th>Mensagem</th>
               <th>Bolos</th>
               <th>Situação</th>
-              <th>Pagamento</th>
               <th>Ações</th>
             </tr>
           </thead>
@@ -212,15 +203,7 @@ export default function ListaPedidos() {
                   >
                     <option value={1}>Pendente</option>
                     <option value={2}>Finalizado</option>
-                  </select>
-                </td>
-                <td>
-                  <select
-                    value={order.payment}
-                    onChange={(e) => handlePaymentChange(order.id_order, Number(e.target.value))}
-                  >
-                    <option value={1}>Pendente</option>
-                    <option value={2}>Pago</option>
+                    <option value={3}>Pago</option>
                   </select>
                 </td>
                 <td>

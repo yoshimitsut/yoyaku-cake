@@ -124,7 +124,7 @@ function OrderCake() {
                   <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
                 ))}
               </select>
-
+              
               <label>個数:</label>
               <select
                 value={item.quantity}
@@ -134,6 +134,17 @@ function OrderCake() {
                   <option key={num} value={String(num)}>{num}</option>
                 ))}
               </select>
+              
+              <label>個数:</label>
+              <select
+                value={item.quantity}
+                onChange={(e) => updateCake(index, "quantity", e.target.value)}
+              >
+                {[1, 2, 3, 4, 5].map((num) => (
+                  <option key={num} value={String(num)}>{num}</option>
+                ))}
+              </select>
+      
             </div>
           ))}
 
@@ -157,7 +168,7 @@ function OrderCake() {
           {orderId && (
             <div style={{ marginTop: 20 }}>
               <h3>QRコード:</h3>
-              <QRCodeCanvas value={String(orderId)} size={200} />
+              <QRCodeCanvas value={String(orderId)} size={400} />
               <p>ID: {orderId}</p>
             </div>
           )}
