@@ -2,77 +2,52 @@
   "cakes": [
     {
       "id_cake": 1,
-      "name": "① ノエルフレーズ ４号 ￥３,７００",
+      "name": "ノエルフレーズ",
+      "size": [
+        "４号 ￥３,７００", 
+        "５号 ￥４,６００", 
+        "６号 ￥５,６００"
+      ],
       "quantity": 10,
-      "price": 3700,
       "image": "../image/ノエルフレーズ.jpg"
     },
+    
     {
       "id_cake": 2,
-      "name": "① ノエルフレーズ ５号 ￥４,６００",
-      "quantity": 8,
-      "price": 4600,
-      "image": "../image/ノエルフレーズ.jpg"
-    },
-    {
-      "id_cake": 3,
-      "name": "① ノエルフレーズ ６号 ￥５,６００",
-      "quantity": 5,
-      "price": 5600,
-      "image": "../image/ノエルフレーズ.jpg"
-    },
-    {
-      "id_cake": 4,
-      "name": "② ノエルショコラ ４号 ￥３,９００",
+      "name": "ノエルショコラ",
+      "size": ["４号 ￥３,９００", "５号 ￥４,８００", "６号 ￥５,８００"],
       "quantity": 5,
       "price": 3900,
       "image": "../image/ノエルショコラ.jpg"
     },
     {
-      "id_cake": 5,
-      "name": "② ノエルショコラ ５号 ￥４,８００",
-      "quantity": 5,
-      "price": 4800,
-      "image": "../image/ノエルショコラ.jpg"
-    },
-    {
-      "id_cake": 6,
-      "name": "② ノエルショコラ ６号 ￥５,８００",
-      "quantity": 5,
-      "price": 5800,
-      "image": "../image/ノエルショコラ.jpg"
-    },
-    {
-      "id_cake": 7,
-      "name": "③ パリブレストピスターシュ　１５cm ￥４,８００",
+      "id_cake": 3,
+      "name": "パリブレストピスターシュ",
+      "size": "１５cm ￥４,８００",
       "quantity": 5,
       "price": 4800,
       "image": "../image/パリブレストピスターシュ.jpg"
     },
     {
-      "id_cake": 8,
-      "name": "④ フェデルタ　５号　￥５,６００（完売）",
-      "quantity": 5,
+      "id_cake": 4,
+      "name": "フェデルタ　arrumar（完売）",
+      "size": "￥５,６００",
+      "quantity": 0,
       "price": 5600,
       "image": "../image/フェデルタ.jpg"
     },
     {
-      "id_cake": 9,
-      "name": "⑤ ノエルレア　１６cm x １１cm ￥４,６００",
+      "id_cake": 5,
+      "name": "ノエルレア",
+      "size": ["１６cm x １１cm ￥４,６００", "１４cm x １４cm ￥４,６００"],
       "quantity": 5,
       "price": 4600,
       "image": "../image/ノエルレア.jpg"
     },
     {
-      "id_cake": 10,
-      "name": "⑥ ノエルブラウニー　１４cm x １４cm ￥４,６００",
-      "quantity": 5,
-      "price": 4600,
-      "image": "../image/ノエルブラウニー.jpg"
-    },
-    {
-      "id_cake": 11,
-      "name": "⑦ クリスマスロール　１７cm ￥３,２００",
+      "id_cake": 6,
+      "name": "クリスマスロール　",
+      "size": "１７cm ￥３,２００",
       "quantity": 5,
       "price": 3200,
       "image": "../image/クリスマスロール.jpg"

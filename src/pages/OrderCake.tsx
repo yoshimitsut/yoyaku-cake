@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import cakesData from '../data/cake.json';
 import { QRCodeCanvas } from "qrcode.react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -9,18 +11,26 @@ const cakeOptions = cakesData.cakes;
 type CakeOrder = {
   cake: number; 
   quantity: string;
+  size?: string;
 };
 
 function OrderCake() {
   const [orderId, setOrderId] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const [cakes, setCakes] = useState<CakeOrder[]>([
-    { cake: 0, quantity: "1" },
+    { cake: 0, quantity: "1", size: "" },
   ]);
 
   const addCake = () => {
     setCakes([...cakes, { cake: 0, quantity: "1" }]);
   };
+
+  const updateCakeSize = (index: number, value: string)=> {
+    const newCakes = [...cakes];
+    newCakes[index].size = value;
+    setCakes(newCakes);
+  }
 
   const updateCake = (index: number, field: keyof CakeOrder, value: string) => {
     const newCakes = [...cakes];
@@ -46,7 +56,8 @@ function OrderCake() {
       last_name: (document.getElementById("lastname") as HTMLInputElement).value,
       email: (document.getElementById("email") as HTMLInputElement).value,
       tel,
-      date: (document.getElementById("date") as HTMLSelectElement).value,
+      // date: (document.getElementById("date") as HTMLSelectElement).value,
+      date: selectedDate?.toISOString().split('T')[0] || "",
       hour: (document.getElementById("hours") as HTMLSelectElement).value,
       message: (document.getElementById("message") as HTMLTextAreaElement).value,
       cakes: cakes.map(c => {
@@ -102,8 +113,13 @@ function OrderCake() {
           <label htmlFor="tel">*お電話番号</label>
           <input type="text" name="tel" id="tel" placeholder='ハイフン不要' />
   
-          {cakes.map((item, index) => (
-            
+          {cakes.map((item, index) => {
+            const selectedCake = cakeOptions.find(cake => cake.id_cake === item.cake);
+            const sizes = selectedCake ? Array.isArray(selectedCake.size)
+                                        ? selectedCake.size
+                                        : [selectedCake.size]
+                                      : [];
+            return(
             <div className='box-cake' key={index}>
               {item.cake !== 0 && (
                 <img
@@ -119,19 +135,22 @@ function OrderCake() {
                 onChange={(e) => updateCake(index, "cake", e.target.value)}
                 required
               >
-                <option value={0} disabled>ケーキを選択</option>
+                <option value={0} disabled>ケーキ名</option>
                 {cakeOptions.map((cake) => (
                   <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
                 ))}
               </select>
               
-              <label>個数:</label>
+              <label>ケーキのサイズ</label>
               <select
-                value={item.quantity}
-                onChange={(e) => updateCake(index, "quantity", e.target.value)}
+                value={item.size || ""}
+                onChange={(e) => updateCakeSize(index, e.target.value)}
+                disabled={!item.cake}
+                required
               >
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <option key={num} value={String(num)}>{num}</option>
+                <option value="">サイズを選択</option>
+                {sizes.map((s, i) => (
+                  <option key={i} value={s}>{s}</option>
                 ))}
               </select>
               
@@ -146,15 +165,28 @@ function OrderCake() {
               </select>
       
             </div>
-          ))}
+          );
+        })}
 
-          <button type='button' className='btn' onClick={addCake}>＋ ケーキを追加</button>
+          <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
 
-          <select id="date" className='date'>
+          {/* <select id="date" className='date'>
             {["12月21日（土）","12月22日（日）","12月23日（月）","12月24日（火）","12月25日（水）"].map((d, i) => (
               <option key={i} value={d}>{d}</option>
             ))}
-          </select>
+          </select> */}
+
+          <label>*受取日</label>
+          <DatePicker
+            selected={selectedDate}
+            onChange={(date: Date | null) => setSelectedDate(date)}
+            dateFormat="yyyy-MM-dd"
+            minDate={new Date(2025, 11, 21)} // mês 11 = dezembro
+            maxDate={new Date(2025, 11, 25)}
+            placeholderText="日付を選択"
+            className="date"
+          />
+
 
           <select id="hours" className='hours'>
             {["11~13時","13~17時","17~19時"].map((h, i) => (
