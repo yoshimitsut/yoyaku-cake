@@ -128,6 +128,14 @@ body {
   background-color: #222933;
 }
 
+.cake-information, .date-information, .client-information {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-bottom: 3px solid #000;
+  padding-bottom: 15px;
+}
+
 /* Telas pequenas (celulares) */
 @media (max-width: 639px) {
   .container {

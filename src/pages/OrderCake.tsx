@@ -96,106 +96,105 @@ function OrderCake() {
         <h2>クリスマスケーキ予約フォーム</h2>
 
         <form className='form-order' onSubmit={handleSubmit}>
-          <div className='full-name'>
-            <div className='name-label'>
-              <label htmlFor="firstname">*姓(カタカナ)</label>
-              <input id="firstname" name="firstname" type="text" placeholder='ヒガ' />
-            </div>
-            <div className='name-label'>
-              <label htmlFor="lastname">*名(カタカナ)</label>
-              <input id="lastname" name="lastname" type="text" placeholder='タロウ' />
-            </div>
+
+          <div className='cake-information'>
+            {cakes.map((item, index) => {
+              const selectedCake = cakeOptions.find(cake => cake.id_cake === item.cake);
+              const sizes = selectedCake ? Array.isArray(selectedCake.size)
+                                          ? selectedCake.size
+                                          : [selectedCake.size]
+                                        : [];
+              return(
+                <div className='box-cake' key={index}>
+                  {item.cake !== 0 && (
+                    <img
+                      style={{ width: '200px' }}
+                      src={cakeOptions.find((cake) => cake.id_cake === item.cake)?.image}
+                      alt={cakeOptions.find((cake) => cake.id_cake === item.cake)?.name || "ケーキ"}
+                    />
+                  )}
+
+                  <label>ケーキの種類:</label>
+                  <select
+                    value={item.cake}
+                    onChange={(e) => updateCake(index, "cake", e.target.value)}
+                    required
+                  >
+                    <option value={0} disabled>ケーキ名</option>
+                    {cakeOptions.map((cake) => (
+                      <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
+                    ))}
+                  </select>
+                  
+                  <label>ケーキのサイズ</label>
+                  <select
+                    value={item.size || ""}
+                    onChange={(e) => updateCakeSize(index, e.target.value)}
+                    disabled={!item.cake}
+                    required
+                  >
+                    <option value="">サイズを選択</option>
+                    {sizes.map((s, i) => (
+                      <option key={i} value={s}>{s}</option>
+                    ))}
+                  </select>
+                  
+                  <label>個数:</label>
+                  <select
+                    value={item.quantity}
+                    onChange={(e) => updateCake(index, "quantity", e.target.value)}
+                  >
+                    {[1, 2, 3, 4, 5].map((num) => (
+                      <option key={num} value={String(num)}>{num}</option>
+                    ))}
+                  </select>
+          
+                </div>
+              );
+            })}
+            <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
           </div>
 
-          <label htmlFor="email">*メールアドレス</label>
-          <input type="email" name="email" id="email" placeholder='必須'/>
-
-          <label htmlFor="tel">*お電話番号</label>
-          <input type="text" name="tel" id="tel" placeholder='ハイフン不要' />
-  
-          {cakes.map((item, index) => {
-            const selectedCake = cakeOptions.find(cake => cake.id_cake === item.cake);
-            const sizes = selectedCake ? Array.isArray(selectedCake.size)
-                                        ? selectedCake.size
-                                        : [selectedCake.size]
-                                      : [];
-            return(
-            <div className='box-cake' key={index}>
-              {item.cake !== 0 && (
-                <img
-                  style={{ width: '200px' }}
-                  src={cakeOptions.find((cake) => cake.id_cake === item.cake)?.image}
-                  alt={cakeOptions.find((cake) => cake.id_cake === item.cake)?.name || "ケーキ"}
-                />
-              )}
-
-              <label>ケーキの種類:</label>
-              <select
-                value={item.cake}
-                onChange={(e) => updateCake(index, "cake", e.target.value)}
-                required
-              >
-                <option value={0} disabled>ケーキ名</option>
-                {cakeOptions.map((cake) => (
-                  <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
-                ))}
-              </select>
-              
-              <label>ケーキのサイズ</label>
-              <select
-                value={item.size || ""}
-                onChange={(e) => updateCakeSize(index, e.target.value)}
-                disabled={!item.cake}
-                required
-              >
-                <option value="">サイズを選択</option>
-                {sizes.map((s, i) => (
-                  <option key={i} value={s}>{s}</option>
-                ))}
-              </select>
-              
-              <label>個数:</label>
-              <select
-                value={item.quantity}
-                onChange={(e) => updateCake(index, "quantity", e.target.value)}
-              >
-                {[1, 2, 3, 4, 5].map((num) => (
-                  <option key={num} value={String(num)}>{num}</option>
-                ))}
-              </select>
-      
+          <div className='client-information'>
+            <div className='full-name'>
+              <div className='name-label'>
+                <label htmlFor="firstname">*姓(カタカナ)</label>
+                <input id="firstname" name="firstname" type="text" placeholder='ヒガ' />
+              </div>
+              <div className='name-label'>
+                <label htmlFor="lastname">*名(カタカナ)</label>
+                <input id="lastname" name="lastname" type="text" placeholder='タロウ' />
+              </div>
             </div>
-          );
-        })}
 
-          <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
+            <label htmlFor="email">*メールアドレス</label>
+            <input type="email" name="email" id="email" placeholder='必須'/>
 
-          {/* <select id="date" className='date'>
-            {["12月21日（土）","12月22日（日）","12月23日（月）","12月24日（火）","12月25日（水）"].map((d, i) => (
-              <option key={i} value={d}>{d}</option>
-            ))}
-          </select> */}
+            <label htmlFor="tel">*お電話番号</label>
+            <input type="text" name="tel" id="tel" placeholder='ハイフン不要' />
+          </div>
+          
+          <div className='date-information'>
+            <label>*受取日</label>
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date: Date | null) => setSelectedDate(date)}
+              dateFormat="yyyy-MM-dd"
+              minDate={new Date(2025, 11, 21)} // mês 11 = dezembro
+              maxDate={new Date(2025, 11, 25)}
+              placeholderText="日付を選択"
+              className="date"
+            />
 
-          <label>*受取日</label>
-          <DatePicker
-            selected={selectedDate}
-            onChange={(date: Date | null) => setSelectedDate(date)}
-            dateFormat="yyyy-MM-dd"
-            minDate={new Date(2025, 11, 21)} // mês 11 = dezembro
-            maxDate={new Date(2025, 11, 25)}
-            placeholderText="日付を選択"
-            className="date"
-          />
+            <select id="hours" className='hours'>
+              {["11~13時","13~17時","17~19時"].map((h, i) => (
+                <option key={i} value={h}>{h}</option>
+              ))}
+            </select>
 
-
-          <select id="hours" className='hours'>
-            {["11~13時","13~17時","17~19時"].map((h, i) => (
-              <option key={i} value={h}>{h}</option>
-            ))}
-          </select>
-
-          <textarea id="message" className='message' placeholder="メッセージプレートの内容など"></textarea>
-
+            <textarea id="message" className='message' placeholder="メッセージプレートの内容など"></textarea>
+          </div>
+          
           <button type="submit" className='send btn'>送信</button>
           {orderId && (
             <div style={{ marginTop: 20 }}>
