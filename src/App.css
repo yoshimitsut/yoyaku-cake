@@ -34,7 +34,7 @@ body {
   flex-direction: column;
   align-items: center;
   margin-top: 120px;
-  border: 4px #b5b5b5 solid;
+  /* border: 4px #b5b5b5 solid; */
   box-sizing: border-box;
 
   h2 {
@@ -109,12 +109,21 @@ body {
 
 }
 
+.reciver-day-group{
+  display: flex;
+  gap: 10px;
+}
+
+.reciver-day {
+  z-index: 1;
+}
+
 .box-cake{
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #000;
   padding: 12px;
+  position: relative;
 }
 
 .btn  {
@@ -131,9 +140,9 @@ body {
 .cake-information, .date-information, .client-information {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  /* gap: 15px; */
   border-bottom: 3px solid #000;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 }
 
 /* Telas pequenas (celulares) */
@@ -151,6 +160,53 @@ body {
     }
   }
 }
+
+.input-group {
+  position: relative;
+  margin: 16px 0;
+  width: 100%;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 16px 12px 8px;
+  font-size: 16px;
+  border: 1px solid #000;
+  border-radius:  10px;
+  background-color: #fff;
+  color: #000;
+  outline: none;
+}
+
+.input-group label {
+  position: absolute;
+  /* top: 50%; */
+  left: 12px;
+  transform: translateY(-50%);
+  background-color: white;
+  padding: 0 4px;
+  color: #666;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.2s ease all;
+}
+
+/* Flutua quando focado ou preenchido */
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group select:focus + label,
+.input-group select:valid + label,
+.input-group textarea:focus + label,
+.input-group textarea:not(:placeholder-shown) + label {
+  top: 0;
+  left: 8px;
+  font-size: 12px;
+  color: #333;
+}
+
+
 
 /* Tablets */
 @media (min-width: 640px) and (max-width: 767px) {
