@@ -3,6 +3,7 @@ import cakesData from '../data/cake.json';
 // import { QRCodeCanvas } from "qrcode.react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { ja } from 'date-fns/locale';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -176,6 +177,7 @@ function OrderCake() {
           </div>
 
           <div className='client-information'>
+            <label htmlFor="" className='title-information'>お客様情報</label>
             <div className='full-name'>
               <div className='name-label input-group'>
                 <label htmlFor="firstname">*姓(カタカナ)</label>
@@ -199,24 +201,29 @@ function OrderCake() {
           </div>
           
           <div className='date-information'>
-            <div className='input-group reciver-day-group'>
-              <label className='reciver-day'>*受取日</label>
-              <DatePicker
+            <label className='title-information'>受取日 / その他</label>
+            <div className='input-group'>
+              <label className='reciver-day'>*受け取り希望日</label>
+              <DatePicker 
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
-                dateFormat="yyyy-MM-dd"
-                minDate={new Date(2025, 11, 21)} // mês 11 = dezembro
+                dateFormat="yyyy年MM月dd日"
+                minDate={new Date(2025, 11, 21)}
                 maxDate={new Date(2025, 11, 25)}
                 placeholderText="日付を選択"
                 className="date"
+                locale={ja}
               />
 
+            </div>
+            
+            <div className='input-group'>
+              <label htmlFor=" ">受け取り希望時間</label>
               <select id="hours" className='hours'>
                 {["11~13時","13~17時","17~19時"].map((h, i) => (
                   <option key={i} value={h}>{h}</option>
                 ))}
-              </select>
-
+              </select>  
             </div>
 
             <div className='input-group'>

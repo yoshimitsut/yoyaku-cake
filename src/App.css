@@ -72,8 +72,20 @@ body {
   display: flex;
   flex-direction: column;
 
-
   opacity: 1;
+}
+
+.title-information {
+  text-align: center;
+  font-size: x-large;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.danger-color {
+  color: red;
 }
 
 .full-name {
@@ -145,21 +157,6 @@ body {
   padding-bottom: 30px;
 }
 
-/* Telas pequenas (celulares) */
-@media (max-width: 639px) {
-  .container {
-    
-    .full-name {
-      flex-direction: column;
-
-      .name-label {
-        flex-direction: column;
-        display: flex;
-        gap: 10px;
-      }
-    }
-  }
-}
 
 .input-group {
   position: relative;
@@ -169,7 +166,8 @@ body {
 
 .input-group input,
 .input-group select,
-.input-group textarea {
+.input-group textarea,
+.react-datepicker-wrapper {
   width: 100%;
   padding: 16px 12px 8px;
   font-size: 16px;
@@ -231,5 +229,22 @@ body {
     justify-content: center;
     flex-direction: column;
     
+  }
+}
+
+
+/* Telas pequenas (celulares) */
+@media (max-width: 639px) {
+  .container {
+    
+    .full-name {
+      flex-direction: column;
+
+      .name-label {
+        flex-direction: column;
+        display: flex;
+        gap: 10px;
+      }
+    }
   }
 }
