@@ -33,6 +33,14 @@ function OrderCake() {
   const [cakes, setCakes] = useState<CakeOrder[]>([
     { cake: String(cakeOptions[0].id_cake) , quantity: "1", size: "" },
   ]);
+  
+  const [pickupHour, setPickupHour] = useState("11~13時");
+
+  const hoursOptions = [
+    { value: "11~13時", label: "11~13時" },
+    { value: "13~17時", label: "13~17時" },
+    { value: "17~19時", label: "17~19時" },
+  ];
 
   const quantityOptions = Array.from({ length: 10 }, (_, i) => ({
     value: (i + 1).toString(),
@@ -102,7 +110,7 @@ function OrderCake() {
       tel,
       // date: (document.getElementById("date") as HTMLSelectElement).value,
       date: selectedDate?.toISOString().split('T')[0] || "",
-      hour: (document.getElementById("hours") as HTMLSelectElement).value,
+      pickupHour: (document.getElementById("hours") as HTMLSelectElement).value,
       message: (document.getElementById("message") as HTMLTextAreaElement).value,
       cakes: cakes.map(c => {
         const cakeData = cakeOptions.find(cake => Number(cake.id_cake) === Number(c.cake));
@@ -175,7 +183,7 @@ function OrderCake() {
                       styles={customStyles} 
                       required
                       />
-                      <label>ケーキ名:</label>
+                      <label className='select-group'>*ケーキ名:</label>
                   </div>
                   
                   <div className='input-group'>
@@ -191,7 +199,7 @@ function OrderCake() {
                       required
                       />
                     )}
-                    <label>ケーキのサイズ</label>
+                    <label className='select-group'>*ケーキのサイズ</label>
                   </div>
 
                   <div className='input-group'>
@@ -204,7 +212,7 @@ function OrderCake() {
                       placeholder="数量"
                       styles={customStyles}
                       />
-                      <label>個数:</label>
+                      <label className='select-group'>*個数:</label>
                   </div>
                 </div>
               );
@@ -237,9 +245,8 @@ function OrderCake() {
           </div>
           
           <div className='date-information'>
-            <label className='title-information'>受取日 / その他</label>
+            <label className='title-information'>*受取日 / その他</label>
             <div className='input-group'>
-              <label className='reciver-day'>*受け取り希望日</label>
               <DatePicker 
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
@@ -250,16 +257,21 @@ function OrderCake() {
                 className="date"
                 locale={ja}
               />
+              <label className='reciver-day'>*受け取り希望日</label>
 
             </div>
             
             <div className='input-group'>
-              <label htmlFor="hours">受け取り希望時間</label>
-              <select id="hours" className='hours'>
-                {["11~13時","13~17時","17~19時"].map((h, i) => (
-                  <option key={i} value={h}>{h}</option>
-                ))}
-              </select>  
+              <Select
+                inputId="pickupHour"
+                options={hoursOptions}
+                value={hoursOptions.find(h => h.value === pickupHour)}
+                onChange={(selected) => setPickupHour(selected?.value || "11~13時")}
+                classNamePrefix="react-select"
+                styles={customStyles}
+
+              /> 
+              <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
             </div>
 
             <div className='input-group'>
