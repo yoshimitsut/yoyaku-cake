@@ -1,174 +1,257 @@
 import { useState } from 'react';
-import cakeData from '../data/cake.json';
-import axios from 'axios';
-import Select from 'react-select';
-import DatePicker, { registerLocale } from 'react-datepicker';
+import cakesData from '../data/cake.json';
+// import { QRCodeCanvas } from "qrcode.react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { ja } from 'date-fns/locale';
-import 'react-datepicker/dist/react-datepicker.css';
+import Select from 'react-select';
 
-registerLocale('ja', ja);
 
-const cakeOptions = cakeData.cakes;
+const API_URL = import.meta.env.VITE_API_URL;
 
-const quantityOptions = Array.from({ length: 10 }, (_, i) => ({
-  value: (i + 1).toString(),
-  label: `${i + 1}個`,
-}));
+const cakeOptions = cakesData.cakes;
 
-export default function OrderCake() {
-  const [cakeList, setCakeList] = useState([{ cake: 0, quantity: "1", size: "" }]);
-  const [name, setName] = useState('');
-  const [tel, setTel] = useState('');
-  const [pickupDate, setPickupDate] = useState(new Date());
-  const [pickupHour, setPickupHour] = useState("11~13時");
-  const [message, setMessage] = useState('');
+type CakeOrder = {
+  cake: number; 
+  quantity: string;
+  size: string;
+};
+
+function OrderCake() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
-  };
+  // const [orderId, setOrderId] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
-  const hoursOptions = [
-    { value: "11~13時", label: "11~13時" },
-    { value: "13~17時", label: "13~17時" },
-    { value: "17~19時", label: "17~19時" },
-  ];
-
-  const updateCake = (index: number, field: string, value: string) => {
-    const updated = [...cakeList];
-    updated[index] = { ...updated[index], [field]: value };
-    setCakeList(updated);
-  };
+  const [cakes, setCakes] = useState<CakeOrder[]>([
+    { cake: cakeOptions[0].id_cake , quantity: "1", size: "" },
+  ]);
 
   const addCake = () => {
-    setCakeList([...cakeList, { cake: 0, quantity: "1", size: "" }]);
+    const defaultCake = cakeOptions[0];
+    const defaultSize = Array.isArray(defaultCake.size)
+      ? defaultCake.size[0]
+      : defaultCake.size;
+
+    const newCake: CakeOrder = {
+      cake: defaultCake.id_cake,
+      size: defaultSize,
+      quantity: "1",
+    }
+
+    setCakes((prevCakes) => [...prevCakes, newCake]);
+  };
+
+  const updateCakeSize = (index: number, value: string)=> {
+    const newCakes = [...cakes];
+    newCakes[index].size = value;
+    setCakes(newCakes);
+  }
+
+  const updateCake = (index: number, field: keyof CakeOrder, value: string) => {
+    const newCakes = [...cakes];
+    if (field === 'cake') {
+      newCakes[index].cake = parseInt(value);
+    } else {
+      newCakes[index][field] = value;
+    }
+    setCakes(newCakes);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    
+    const telInput = (document.getElementById("tel") as HTMLInputElement).value
+    const tel = telInput.replace(/\D/g, '');
+    const id_client = tel.slice(-4);
+    
+    const data = {
+      // id_client: Math.random().toString(36).substring(2, 8),
+      id_client,
+      first_name: (document.getElementById("firstname") as HTMLInputElement).value,
+      last_name: (document.getElementById("lastname") as HTMLInputElement).value,
+      email: (document.getElementById("email") as HTMLInputElement).value,
+      tel,
+      // date: (document.getElementById("date") as HTMLSelectElement).value,
+      date: selectedDate?.toISOString().split('T')[0] || "",
+      hour: (document.getElementById("hours") as HTMLSelectElement).value,
+      message: (document.getElementById("message") as HTMLTextAreaElement).value,
+      cakes: cakes.map(c => {
+        const cakeData = cakeOptions.find(cake => cake.id_cake === c.cake);
+        return {
+          ...cakeData,
+          amount: parseInt(c.quantity)
+        };
+      })
+    };
+
+
     try {
-      await axios.post(import.meta.env.VITE_API_URL + '/order', {
-        name,
-        tel,
-        pickupDate,
-        pickupHour,
-        message,
-        cakes: cakeList,
+      const res = await fetch(`${API_URL}/api/reserva`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-      alert("ご予約ありがとうございます！");
-      setName('');
-      setTel('');
-      setMessage('');
-      setPickupDate(new Date());
-      setPickupHour("11~13時");
-      setCakeList([{ cake: 0, quantity: "1", size: "" }]);
+
+      const result = await res.json();
+      if (result.success) {
+        // setOrderId(result.id); // armazena o id do pedido
+        alert(`送信が完了しました！受付番号: ${result.id}`);
+      }
+
     } catch (error) {
-      console.error("送信エラー:", error);
       alert("送信に失敗しました。");
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
+
   return (
-    <form className='form-order' onSubmit={handleSubmit}>
-      <div className='input-group'>
-        <label htmlFor="name">お名前</label>
-        <input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-      </div>
+    <div className='reservation-main'>
+      <div className='container'>
+        <h2>クリスマスケーキ予約フォーム</h2>
 
-      <div className='input-group'>
-        <label htmlFor="tel">電話番号</label>
-        <input id="tel" value={tel} onChange={(e) => setTel(e.target.value)} required />
-      </div>
+        <form className='form-order' onSubmit={handleSubmit}>
 
-      <div className='input-group'>
-        <label htmlFor="pickupDate">受け取り希望日</label>
-        <DatePicker
-          id="pickupDate"
-          selected={pickupDate}
-          onChange={handleDateChange}
-          dateFormat="yyyy年MM月dd日"
-          locale="ja"
-          className="datepicker"
-        />
-      </div>
+          <div className='cake-information'>
+            {cakes.map((item, index) => {
+              const selectedCake = cakeOptions.find(cake => cake.id_cake === Number(item.cake));
+              const sizes = selectedCake ? Array.isArray(selectedCake.size)
+                                          ? selectedCake.size
+                                          : [selectedCake.size]
+                                        : [];
+              return(
+                <div className='box-cake' key={index}>
+                  {item.cake !== 0 && (
+                    <img
+                      style={{ width: '350px' }}
+                      src={cakeOptions.find((cake) => cake.id_cake === item.cake)?.image}
+                      alt={cakeOptions.find((cake) => cake.id_cake === item.cake)?.name || "ケーキ"}
+                    />
+                  )}
+                  <div className='input-group'>
+                    <label className='title-cake-name'>ケーキの名:</label>
+                    <select
+                      value={item.cake}
+                      onChange={(e) => updateCake(index, "cake", e.target.value)}
+                      style={{
+                        "padding": "10px 10px 10px 10px",
+                        "color": "red"
+                      }}
+                      required
+                    >
+                      <option value={0} disabled></option>
+                      {cakeOptions.map((cake) => (
+                        <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div className='input-group'>
+                    {selectedCake?.size && (
+                      <Select
+                        options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
+                          .map(size => ({ value: size, label: size }))}
+                        value={item.size ? { value: item.size, label: item.size } : null}
+                        onChange={(selected) => updateCake(index, "size", selected?.value || "")}
+                        classNamePrefix="react-select"
+                        placeholder="サイズを選択"
+                      />
+                    )}
+                  </div>
 
-      <div className='input-group'>
-        <label htmlFor="pickupHour">受け取り希望時間</label>
-        <Select
-          inputId="pickupHour"
-          options={hoursOptions}
-          value={hoursOptions.find(h => h.value === pickupHour)}
-          onChange={(selected) => setPickupHour(selected?.value || "11~13時")}
-          classNamePrefix="react-select"
-        />
-      </div>
-
-      {cakeList.map((item, index) => {
-        const selectedCake = cakeOptions.find(c => c.id_cake === item.cake);
-
-        return (
-          <div key={index} className='box-cake'>
-            <label>ケーキ{index + 1}</label>
-
-            <Select
-              options={cakeOptions.map(c => ({
-                value: c.id_cake,
-                label: c.name
-              }))}
-              value={cakeOptions.find(c => c.id_cake === item.cake)
-                ? { value: item.cake, label: selectedCake?.name || "" }
-                : null}
-              onChange={(selected) => updateCake(index, "cake", String(selected?.value))}
-              classNamePrefix="react-select"
-              placeholder="ケーキを選択"
-              required
-            />
-
-            {selectedCake?.size && (
-              <Select
-                options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
-                  .map(size => ({ value: size, label: size }))}
-                value={item.size ? { value: item.size, label: item.size } : null}
-                onChange={(selected) => updateCake(index, "size", selected?.value || "")}
-                classNamePrefix="react-select"
-                placeholder="サイズを選択"
-              />
-            )}
-
-            <Select
-              options={quantityOptions}
-              value={quantityOptions.find(q => q.value === item.quantity)}
-              onChange={(selected) => updateCake(index, "quantity", selected?.value || "1")}
-              classNamePrefix="react-select"
-              placeholder="数量"
-            />
-
-            {selectedCake?.image && (
-              <img src={selectedCake.image} alt={selectedCake.name} />
-            )}
+                  <div className='input-group'>
+                    <label className='title-cake-quantity'>個数:</label>
+                    <select
+                      value={item.quantity}
+                      onChange={(e) => updateCake(index, "quantity", e.target.value)}
+                    >
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <option key={num} value={String(num)}>{num}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              );
+            })}
+            <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
           </div>
-        );
-      })}
 
-      <button type="button" onClick={addCake}>+ ケーキ追加</button>
+          <div className='client-information'>
+            <label htmlFor="full-name" className='title-information'>お客様情報</label>
+            <div className='full-name'>
+              <div className='name-label input-group'>
+                <label htmlFor="firstname">*姓(カタカナ)</label>
+                <input id="firstname" name="firstname" type="text" placeholder='ヒガ' />
+              </div>
+              <div className='name-label input-group'>
+                <label htmlFor="lastname">*名(カタカナ)</label>
+                <input id="lastname" name="lastname" type="text" placeholder='タロウ' />
+              </div>
+            </div>
+            
+            <div className='input-group'>
+              <label htmlFor="email">*メールアドレス</label>
+              <input type="email" name="email" id="email" placeholder='必須'/>
+            </div>
 
-      <div className='input-group'>
-        <label htmlFor="message">その他</label>
-        <textarea
-          id="message"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="メッセージプレートの内容など"
-        />
+            <div className='input-group'>
+              <label htmlFor="tel">*お電話番号</label>
+              <input type="text" name="tel" id="tel" placeholder='ハイフン不要' />
+            </div>
+          </div>
+          
+          <div className='date-information'>
+            <label className='title-information'>受取日 / その他</label>
+            <div className='input-group'>
+              <label className='reciver-day'>*受け取り希望日</label>
+              <DatePicker 
+                selected={selectedDate}
+                onChange={(date: Date | null) => setSelectedDate(date)}
+                dateFormat="yyyy年MM月dd日"
+                minDate={new Date(2025, 11, 21)}
+                maxDate={new Date(2025, 11, 25)}
+                placeholderText="日付を選択"
+                className="date"
+                locale={ja}
+              />
+
+            </div>
+            
+            <div className='input-group'>
+              <label htmlFor="hours">受け取り希望時間</label>
+              <select id="hours" className='hours'>
+                {["11~13時","13~17時","17~19時"].map((h, i) => (
+                  <option key={i} value={h}>{h}</option>
+                ))}
+              </select>  
+            </div>
+
+            <div className='input-group'>
+              <label htmlFor="message">その他</label>
+              <textarea id="message" className='message' placeholder="メッセージプレートの内容など"></textarea>
+            </div>  
+          </div>
+          
+          <button type="submit" className='send btn' disabled={isSubmitting}>
+            {isSubmitting ? "送信中..." : "送信"}
+          </button>
+          
+          {/* {orderId && (
+            <div style={{ marginTop: 20 }}>
+              <h3>QRコード:</h3>
+              <QRCodeCanvas value={String(orderId)} size={400} />
+              <p>ID: {orderId}</p>
+            </div>
+          )} */}
+
+        </form>
       </div>
-
-      <button className="btn" disabled={isSubmitting}>
-        {isSubmitting ? "送信中..." : "予約する"}
-      </button>
-    </form>
+    </div>
   );
 }
+
+export default OrderCake;
