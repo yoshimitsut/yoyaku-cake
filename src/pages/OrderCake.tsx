@@ -42,11 +42,7 @@ function OrderCake() {
     setCakes((prevCakes) => [...prevCakes, newCake]);
   };
 
-  const updateCakeSize = (index: number, value: string)=> {
-    const newCakes = [...cakes];
-    newCakes[index].size = value;
-    setCakes(newCakes);
-  }
+  
 
   const updateCake = (index: number, field: keyof CakeOrder, value: string) => {
     const newCakes = [...cakes];
@@ -119,10 +115,7 @@ function OrderCake() {
           <div className='cake-information'>
             {cakes.map((item, index) => {
               const selectedCake = cakeOptions.find(cake => cake.id_cake === Number(item.cake));
-              const sizes = selectedCake ? Array.isArray(selectedCake.size)
-                                          ? selectedCake.size
-                                          : [selectedCake.size]
-                                        : [];
+              
               return(
                 <div className='box-cake' key={index}>
                   {item.cake !== 0 && (
@@ -151,16 +144,17 @@ function OrderCake() {
                   </div>
                   
                   <div className='input-group'>
+                    <label className='title-cake-size'>ケーキのサイズ</label>
                     {selectedCake?.size && (
-                      <Select
-                        options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
-                          .map(size => ({ value: size, label: size }))}
-                        value={item.size ? { value: item.size, label: item.size } : null}
-                        onChange={(selected) => updateCake(index, "size", selected?.value || "")}
-                        classNamePrefix="react-select"
-                        placeholder="サイズを選択"
-                      />
-                    )}
+              <Select
+                options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
+                  .map(size => ({ value: size, label: size }))}
+                value={item.size ? { value: item.size, label: item.size } : null}
+                onChange={(selected) => updateCake(index, "size", selected?.value || "")}
+                classNamePrefix="react-select"
+                placeholder="サイズを選択"
+              />
+            )}
                   </div>
 
                   <div className='input-group'>
