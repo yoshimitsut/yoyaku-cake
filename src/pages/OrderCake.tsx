@@ -5,6 +5,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ja } from 'date-fns/locale';
 import Select from 'react-select';
+import type { StylesConfig, GroupBase } from 'react-select';
+
 
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -12,9 +14,14 @@ const API_URL = import.meta.env.VITE_API_URL;
 const cakeOptions = cakesData.cakes;
 
 type CakeOrder = {
-  cake: number; 
+  cake: string; 
   quantity: string;
   size: string;
+};
+
+type OptionType = {
+  value: string;
+  label: string;
 };
 
 function OrderCake() {
@@ -24,9 +31,29 @@ function OrderCake() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const [cakes, setCakes] = useState<CakeOrder[]>([
-    { cake: cakeOptions[0].id_cake , quantity: "1", size: "" },
+    { cake: String(cakeOptions[0].id_cake) , quantity: "1", size: "" },
   ]);
 
+  const quantityOptions = Array.from({ length: 10 }, (_, i) => ({
+    value: (i + 1).toString(),
+    label: `${i + 1} 個`,
+  }));
+
+  const customStyles: StylesConfig<OptionType, false, GroupBase<OptionType>> = {
+    control: (provided, state) => ({
+      ...provided,
+      borderColor: state.isFocused ? '#FF7F50' : '#ccc',
+      boxShadow: 'none',
+      border: '1px solid #000',
+      borderRadius: '10px',
+      paddingTop: '10px',
+      paddingBottom: '10px',
+      '&:hover': {
+        borderColor: '#FF7F50',
+      },
+    }),
+  }
+  
   const addCake = () => {
     const defaultCake = cakeOptions[0];
     const defaultSize = Array.isArray(defaultCake.size)
@@ -34,7 +61,7 @@ function OrderCake() {
       : defaultCake.size;
 
     const newCake: CakeOrder = {
-      cake: defaultCake.id_cake,
+      cake: String(defaultCake.id_cake),
       size: defaultSize,
       quantity: "1",
     }
@@ -42,12 +69,16 @@ function OrderCake() {
     setCakes((prevCakes) => [...prevCakes, newCake]);
   };
 
-  
+  // const updateCakeSize = (index: number, value: string)=> {
+  //   const newCakes = [...cakes];
+  //   newCakes[index].size = value;
+  //   setCakes(newCakes);
+  // }
 
   const updateCake = (index: number, field: keyof CakeOrder, value: string) => {
     const newCakes = [...cakes];
     if (field === 'cake') {
-      newCakes[index].cake = parseInt(value);
+      newCakes[index].cake = value;
     } else {
       newCakes[index][field] = value;
     }
@@ -74,7 +105,7 @@ function OrderCake() {
       hour: (document.getElementById("hours") as HTMLSelectElement).value,
       message: (document.getElementById("message") as HTMLTextAreaElement).value,
       cakes: cakes.map(c => {
-        const cakeData = cakeOptions.find(cake => cake.id_cake === c.cake);
+        const cakeData = cakeOptions.find(cake => Number(cake.id_cake) === Number(c.cake));
         return {
           ...cakeData,
           amount: parseInt(c.quantity)
@@ -115,58 +146,65 @@ function OrderCake() {
           <div className='cake-information'>
             {cakes.map((item, index) => {
               const selectedCake = cakeOptions.find(cake => cake.id_cake === Number(item.cake));
-              
+              // const sizes = selectedCake ? Array.isArray(selectedCake.size)
+              //                             ? selectedCake.size
+              //                             : [selectedCake.size]
+              //                           : [];
               return(
                 <div className='box-cake' key={index}>
-                  {item.cake !== 0 && (
+                  {item.cake !== "0" && (
                     <img
                       style={{ width: '350px' }}
-                      src={cakeOptions.find((cake) => cake.id_cake === item.cake)?.image}
-                      alt={cakeOptions.find((cake) => cake.id_cake === item.cake)?.name || "ケーキ"}
+                      src={cakeOptions.find((cake) => Number(cake.id_cake) === Number(item.cake))?.image}
+                      alt={cakeOptions.find((cake) => Number(cake.id_cake) === Number(item.cake))?.name || "ケーキ"}
                     />
                   )}
                   <div className='input-group'>
-                    <label className='title-cake-name'>ケーキの名:</label>
-                    <select
-                      value={item.cake}
-                      onChange={(e) => updateCake(index, "cake", e.target.value)}
-                      style={{
-                        "padding": "10px 10px 10px 10px",
-                        "color": "red"
-                      }}
+                    <Select
+                      options={cakeOptions.map(c => ({
+                        value: String(c.id_cake),
+                        label: String(c.name),
+                        className: 'teste'
+                      }))}
+                      value={cakeOptions.find(c => Number(c.id_cake) === Number(item.cake))
+                        ? { value: item.cake, label: selectedCake?.name || "" }
+                        : null}
+                      onChange={(selected) => updateCake(index, "cake", String(selected?.value))}
+                      classNamePrefix="react-select"
+                      placeholder="ケーキを選択"
+                      styles={customStyles} 
                       required
-                    >
-                      <option value={0} disabled></option>
-                      {cakeOptions.map((cake) => (
-                        <option key={cake.id_cake} value={cake.id_cake}>{cake.name}</option>
-                      ))}
-                    </select>
+                      />
+                      <label>ケーキ名:</label>
                   </div>
                   
                   <div className='input-group'>
-                    <label className='title-cake-size'>ケーキのサイズ</label>
                     {selectedCake?.size && (
-              <Select
-                options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
-                  .map(size => ({ value: size, label: size }))}
-                value={item.size ? { value: item.size, label: item.size } : null}
-                onChange={(selected) => updateCake(index, "size", selected?.value || "")}
-                classNamePrefix="react-select"
-                placeholder="サイズを選択"
-              />
-            )}
+                      <Select
+                      options={(Array.isArray(selectedCake.size) ? selectedCake.size : [selectedCake.size])
+                        .map(size => ({ value: size, label: size }))}
+                        value={item.size ? { value: item.size, label: item.size } : null}
+                        onChange={(selected) => updateCake(index, "size", selected?.value || "")}
+                      classNamePrefix="react-select"
+                      placeholder="サイズを選択"
+                      styles={customStyles} 
+                      required
+                      />
+                    )}
+                    <label>ケーキのサイズ</label>
                   </div>
 
                   <div className='input-group'>
-                    <label className='title-cake-quantity'>個数:</label>
-                    <select
-                      value={item.quantity}
-                      onChange={(e) => updateCake(index, "quantity", e.target.value)}
-                    >
-                      {[1, 2, 3, 4, 5].map((num) => (
-                        <option key={num} value={String(num)}>{num}</option>
-                      ))}
-                    </select>
+                    <Select
+                      options={quantityOptions}
+                      value={quantityOptions.find(q => q.value === item.quantity)}
+                      onChange={(selected) => updateCake(index, "quantity", selected?.value || "1")}
+                      classNamePrefix="react-select"
+                      className="select-cake"
+                      placeholder="数量"
+                      styles={customStyles}
+                      />
+                      <label>個数:</label>
                   </div>
                 </div>
               );
