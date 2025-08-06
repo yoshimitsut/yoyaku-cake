@@ -135,6 +135,10 @@ function OrderCake() {
                     <select
                       value={item.cake}
                       onChange={(e) => updateCake(index, "cake", e.target.value)}
+                      style={{
+                        "padding": "10px 10px 10px 10px",
+                        "color": "blue"
+                      }}
                       required
                     >
                       <option value={0} disabled></option>
