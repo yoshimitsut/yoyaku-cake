@@ -264,7 +264,6 @@ function OrderCake() {
             </div>
             
             <div className='input-group'>
-              <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
               <Select
                 inputId="pickupHour"
                 options={hoursOptions}
@@ -272,8 +271,8 @@ function OrderCake() {
                 onChange={(selected) => setPickupHour(selected?.value || "11~13時")}
                 classNamePrefix="react-select"
                 styles={customStyles}
-
               /> 
+              <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
             </div>
 
             <div className='input-group'>
