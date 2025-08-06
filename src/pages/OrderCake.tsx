@@ -137,7 +137,7 @@ function OrderCake() {
                       onChange={(e) => updateCake(index, "cake", e.target.value)}
                       style={{
                         "padding": "10px 10px 10px 10px",
-                        "color": "blue"
+                        "color": "red"
                       }}
                       required
                     >

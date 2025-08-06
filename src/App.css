@@ -253,12 +253,12 @@ body {
     }
   }
 
-/* .input-group input,
+.input-group input,
 .input-group select,
 .input-group textarea,
 .react-datepicker-wrapper {
   appearance: none; 
-} */
+}
 .select-wrapper {
   position: relative;
   display: inline-block;
