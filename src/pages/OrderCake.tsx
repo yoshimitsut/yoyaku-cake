@@ -130,7 +130,7 @@ function OrderCake() {
                       alt={cakeOptions.find((cake) => cake.id_cake === item.cake)?.name || "ケーキ"}
                     />
                   )}
-                  <div className='input-group'>
+                  <div className='input-group select-wrapper'>
                     <label className='title-cake-name'>ケーキの名:</label>
                     <select
                       value={item.cake}
