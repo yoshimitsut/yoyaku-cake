@@ -247,6 +247,7 @@ function OrderCake() {
           <div className='date-information'>
             <label className='title-information'>*受取日 / その他</label>
             <div className='input-group'>
+              <label className='reciver-day'>*受け取り希望日</label>
               <DatePicker 
                 selected={selectedDate}
                 onChange={(date: Date | null) => setSelectedDate(date)}
@@ -254,14 +255,16 @@ function OrderCake() {
                 minDate={new Date(2025, 11, 21)}
                 maxDate={new Date(2025, 11, 25)}
                 placeholderText="日付を選択"
-                className="date"
+                className="react-datepicker"
                 locale={ja}
+                calendarClassName="datepicker-calendar"
+                
               />
-              <label className='reciver-day'>*受け取り希望日</label>
 
             </div>
             
             <div className='input-group'>
+              <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
               <Select
                 inputId="pickupHour"
                 options={hoursOptions}
@@ -271,7 +274,6 @@ function OrderCake() {
                 styles={customStyles}
 
               /> 
-              <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
             </div>
 
             <div className='input-group'>
