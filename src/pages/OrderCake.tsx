@@ -110,7 +110,7 @@ function OrderCake() {
   return (
     <div className='reservation-main'>
       <div className='container'>
-        <h1>クリスマスケーキ予約フォーム</h1>
+        <h2>クリスマスケーキ予約フォーム</h2>
 
         <form className='form-order' onSubmit={handleSubmit}>
 
@@ -136,6 +136,10 @@ function OrderCake() {
                       value={item.cake}
                       onChange={(e) => updateCake(index, "cake", e.target.value)}
                       required
+                      style={{
+                        "padding":"16px 12px 8px",
+                        "color": "red"
+                      }}
                     >
                       <option value={0} disabled></option>
                       {cakeOptions.map((cake) => (
@@ -177,7 +181,7 @@ function OrderCake() {
           </div>
 
           <div className='client-information'>
-            <label htmlFor="" className='title-information'>お客様情報</label>
+            <label htmlFor="full-name" className='title-information'>お客様情報</label>
             <div className='full-name'>
               <div className='name-label input-group'>
                 <label htmlFor="firstname">*姓(カタカナ)</label>
