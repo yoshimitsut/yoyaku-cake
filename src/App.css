@@ -180,7 +180,7 @@ body {
   background-color: #fff;
   color: #000;
   outline: none;
-  appearance: none;
+  /* appearance: none; */
 }
 
 .input-group label {
@@ -252,4 +252,12 @@ body {
       }
     }
   }
+
+.input-group input,
+.input-group select,
+.input-group textarea,
+.react-datepicker-wrapper {
+  appearance: none; 
+}
+
 }

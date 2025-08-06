@@ -136,10 +136,6 @@ function OrderCake() {
                       value={item.cake}
                       onChange={(e) => updateCake(index, "cake", e.target.value)}
                       required
-                      style={{
-                        "padding":"16px 12px 8px",
-                        "color": "red"
-                      }}
                     >
                       <option value={0} disabled></option>
                       {cakeOptions.map((cake) => (
