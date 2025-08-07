@@ -217,6 +217,14 @@ body {
 .react-datepicker {
   font-size: 2rem;
   border-radius: 8px;
+  width: 120%;
+  height: 120%;
+}
+
+.react-datepicker__month-container {
+  font-size: x-large;
+  width: 100%;
+  height: 100%;
 }
 
 .react-datepicker__input-container input {
