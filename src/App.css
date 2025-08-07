@@ -227,13 +227,23 @@ body {
   height: 100%;
 }
 
+.react-datepicker-wrapper{
+  width: 100%;
+}
+
 .react-datepicker__input-container input {
   /* padding: 12px 16px; */
   font-size: 1.2rem;
-  width: 190%;
   /* border: 1px solid #ccc; */
   /* border-radius: 6px; */
 }
+
+.react-datepicker__day-names div, .react-datepicker__month div {
+  padding: 1px;
+  margin: 9px;
+  font-size: larger;
+}
+
 
 /* Tablets */
 @media (min-width: 640px) and (max-width: 767px) {
