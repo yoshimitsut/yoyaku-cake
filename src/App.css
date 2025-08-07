@@ -148,14 +148,16 @@ body {
 
 .btn  {
   transition: 0.5s all;
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
   border-radius: 10px;
   width: 80%;
+  font-size: 18px;
+  background-color: #d2d2d2;
 }
 
-.button:hover{
-  background-color: #222933;
+.btn:hover{
+  background-color: #bec3c4;
 }
 
 .cake-information, .date-information, .client-information {
