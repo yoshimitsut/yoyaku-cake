@@ -150,7 +150,6 @@ function OrderCake() {
         <h2>クリスマスケーキ予約フォーム</h2>
 
         <form className='form-order' onSubmit={handleSubmit}>
-
           <div className='cake-information'>
             {cakes.map((item, index) => {
               const selectedCake = cakeOptions.find(cake => cake.id_cake === Number(item.cake));
@@ -162,7 +161,7 @@ function OrderCake() {
                 <div className='box-cake' key={index}>
                   {item.cake !== "0" && (
                     <img
-                      style={{ width: '350px' }}
+                      style={{ width: '350px', paddingBottom: '20px' }}
                       src={cakeOptions.find((cake) => Number(cake.id_cake) === Number(item.cake))?.image}
                       alt={cakeOptions.find((cake) => Number(cake.id_cake) === Number(item.cake))?.name || "ケーキ"}
                     />
