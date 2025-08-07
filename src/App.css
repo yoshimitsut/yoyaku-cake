@@ -238,9 +238,9 @@ body {
   /* border-radius: 6px; */
 }
 
-.react-datepicker__day-names div, .react-datepicker__month div {
+.react-datepicker__day-name {
   padding: 1px;
-  margin: 9px;
+  margin: 7px;
   font-size: larger;
 }
 
