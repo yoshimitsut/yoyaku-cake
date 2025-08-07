@@ -217,7 +217,9 @@ function OrderCake() {
                 </div>
               );
             })}
-            <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
+            <div className='btn-div'>
+              <button type='button' className='btn' onClick={addCake}>＋ 別のケーキを追加</button>
+            </div>
           </div>
 
           <div className='client-information'>
@@ -281,9 +283,12 @@ function OrderCake() {
             </div>  
           </div>
           
-          <button type="submit" className='send btn' disabled={isSubmitting}>
-            {isSubmitting ? "送信中..." : "送信"}
-          </button>
+
+          <div className='btn-div'>
+            <button type="submit" className='send btn' disabled={isSubmitting}>
+              {isSubmitting ? "送信中..." : "送信"}
+            </button>
+          </div>
           
           {/* {orderId && (
             <div style={{ marginTop: 20 }}>

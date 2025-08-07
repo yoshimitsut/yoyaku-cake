@@ -141,6 +141,11 @@ body {
 
 }
 
+.btn-div {
+  display:flex;
+  justify-content: center;
+}
+
 .btn  {
   transition: 0.5s all;
   padding: 10px;
@@ -161,21 +166,12 @@ body {
   padding-bottom: 30px;
 }
 
-.react-select__menu div,
-.teste {
-  position: relative;
-  z-index: 10;
-}
-
 .input-group {
   position: relative;
   margin: 16px 0;
   width: 100%;
 }
 
-.title-wapper {
-  z-index: 1;
-}
 
 /* .select-style div{
     border: none;
