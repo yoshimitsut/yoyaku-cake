@@ -7,7 +7,12 @@ import { ja } from 'date-fns/locale';
 import Select from 'react-select';
 import type { StylesConfig, GroupBase } from 'react-select';
 
-
+import {
+  addDays,
+  endOfMonth,
+  isAfter,
+  isSameDay,
+} from "date-fns";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -25,6 +30,61 @@ type OptionType = {
 };
 
 function OrderCake() {
+
+//Teste de calendario
+const today = new Date();
+const diasABloquear = 3;
+
+// Bloqueia os próximos 3 dias a partir de hoje
+const gerarDiasBloqueadosInicio = () => {
+  const datas = [];
+  let data = today;
+  while (datas.length < diasABloquear) {
+    datas.push(data);
+    data = addDays(data, 1);
+  }
+  return datas;
+};
+
+// Agora definimos dias com mês específico para bloquear
+const diasEspecificosPorMes = [
+  { day: 9, month: 7 },  // 9 de agosto (mês 7)
+  { day: 19, month: 7 }, // 19 de agosto
+  { day: 25, month: 7 }, // 25 de agosto
+  { day: 9, month: 8 },  // 9 de setembro
+  { day: 19, month: 8 }, // 19 de setembro
+  { day: 25, month: 8 }, // 25 de setembro
+];
+
+// Gera datas completas a partir dos pares de dia e mês, somente se forem no futuro
+const gerarDatasEspecificasComMes = () => {
+  const datas: Date[] = [];
+
+  diasEspecificosPorMes.forEach(({ day, month }) => {
+    const date = new Date(today.getFullYear(), month, day);
+    if (isAfter(date, today)) {
+      datas.push(date);
+    }
+  });
+
+  return datas;
+};
+
+const excludedDates = [
+  ...gerarDiasBloqueadosInicio(),
+  ...gerarDatasEspecificasComMes(),
+];
+
+const isDateAllowed = (date: Date) =>
+  !excludedDates.some((d) => isSameDay(d, date));
+
+const maxDate = endOfMonth(addDays(today, 31));
+
+const [selectedDate2, setSelectedDate2] = useState<Date | null>(null);
+
+
+  //Até aqui
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // const [orderId, setOrderId] = useState<number | null>(null);
@@ -263,7 +323,21 @@ function OrderCake() {
               />
 
             </div>
-            
+    <label className='reciver-day'>*Calendário teste</label>        
+<DatePicker
+      selected={selectedDate2}
+      onChange={(date) => setSelectedDate2(date)}
+      minDate={today}
+      maxDate={maxDate}
+      excludeDates={excludedDates}
+      filterDate={isDateAllowed}
+      dateFormat="yyyy年MM月dd日"
+      locale={ja}
+      placeholderText="日付を選択"
+      dayClassName={(date) => isSameDay(date, today) ? "hoje-azul" : ""}
+/>
+
+
             <div className='input-group'>
               <Select
                 inputId="pickupHour"

@@ -288,3 +288,9 @@ body {
   }
 
 }
+
+.react-datepicker__day.hoje-azul {
+  background-color: #007bff;
+  color: white;
+  border-radius: 0.3rem;
+}
