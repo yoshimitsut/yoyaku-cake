@@ -171,7 +171,7 @@ const [selectedDate2, setSelectedDate2] = useState<Date | null>(null);
       tel,
       // date: (document.getElementById("date") as HTMLSelectElement).value,
       date: selectedDate?.toISOString().split('T')[0] || "",
-      pickupHour: (document.getElementById("hours") as HTMLSelectElement).value,
+      pickupHour: (document.getElementById("pickupHour") as HTMLSelectElement).value,
       message: (document.getElementById("message") as HTMLTextAreaElement).value,
       cakes: cakes.map(c => {
         const cakeData = cakeOptions.find(cake => Number(cake.id_cake) === Number(c.cake));
