@@ -12,6 +12,7 @@ import {
   endOfMonth,
   isAfter,
   isSameDay,
+  getDay
 } from "date-fns";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -334,7 +335,11 @@ const [selectedDate2, setSelectedDate2] = useState<Date | null>(null);
       dateFormat="yyyy年MM月dd日"
       locale={ja}
       placeholderText="日付を選択"
-      dayClassName={(date) => isSameDay(date, today) ? "hoje-azul" : ""}
+      dayClassName={(date) => {
+        if (isSameDay(date, today)) return "hoje-azul";
+        if (getDay(date) === 0) return "domingo-vermelho";
+        return "";
+      }}
 />
 
 
