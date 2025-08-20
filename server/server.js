@@ -80,6 +80,7 @@ app.post('/api/reserva', (req, res) => {
           <p>お名前: ${newOrder.first_name} ${newOrder.last_name}</p>
           <p>電話番号: ${newOrder.tel}</p>
           <p>受け取り日時: ${newOrder.date} - ${newOrder.hour}</p>
+          <p></p>
           <p>ご注文内容:</p>
           <ul>
             ${newOrder.cakes.map(c => `<li>${c.name} - ${c.amount}個</li>`).join('')}
